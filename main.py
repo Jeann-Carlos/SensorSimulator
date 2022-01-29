@@ -6,6 +6,8 @@ enviroment.originalMap = enviroment.map.copy()
 laser = sensors.lidarSensor(200,enviroment.originalMap,(0.5,0.01))
 enviroment.map.fill((0,0,0))
 enviroment.infomap = enviroment.map.copy()
+yDimPrecisor=0
+lanePrescision = 4
 
 running = True
 
@@ -19,11 +21,16 @@ while running:
         elif not pygame.mouse.get_focused():
             sensorsON = False
     if sensorsON:
-        for x,y in enviroment.
-        position =
-        laser.position = position
-        sensors_data = laser.has_sensed()
-        enviroment.dataStorage(sensors_data)
-        enviroment.show_sensorData()
+
+        while yDimPrecisor< enviroment.imageDimensions[0]:
+
+            for x in range(enviroment.imageDimensions[1]):
+                print("Scanning at",x,yDimPrecisor)
+                position = (x,yDimPrecisor)
+                laser.position = position
+                sensors_data = laser.has_sensed()
+                enviroment.dataStorage(sensors_data)
+                enviroment.show_sensorData()
+            yDimPrecisor += enviroment.imageDimensions[0] / lanePrescision
     enviroment.map.blit(enviroment.infomap,(0,0))
     pygame.display.update()

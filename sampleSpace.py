@@ -1,6 +1,5 @@
 import math, pygame
 
-
 class startSampleSpaceEnv:
     def __init__(self, imageDimensions):
         pygame.init()

@@ -1,4 +1,4 @@
-import math, pygame
+import math, pygame, sys
 
 class startSampleSpaceEnv:
     def __init__(self, imageDimensions):
@@ -6,8 +6,8 @@ class startSampleSpaceEnv:
         self.imageDimensions = imageDimensions
         self.pointcloud = []
         self.originalMap = []
-        self.externalMap = pygame.image.load('images/NY03cUE.png')
-        self.maph, self.mapw = self.imageDimensions
+        self.externalMap = pygame.image.load(sys.argv[1])
+        self.mapw, self.maph = self.imageDimensions
         self.gameWindowName = '2D lidar path sensor planning'
         pygame.display.set_caption(self.gameWindowName)
         self.map = pygame.display.set_mode((self.mapw, self.maph))

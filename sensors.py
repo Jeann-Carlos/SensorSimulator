@@ -18,7 +18,7 @@ class lidarSensor:
         self.position = (0,0)
         self.range = range
         self.speed = 4
-        self. sigma = np.array([distortion[0],distortion[1]])
+        self.sigma = np.array([distortion,0])
         self.position =(0,0)
         self.map=map
         self.w,self.h = pygame.display.get_surface().get_size()

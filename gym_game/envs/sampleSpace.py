@@ -19,7 +19,6 @@ class startSampleSpaceEnv:
         return (int(x), int(y))
 
     def dataStorage(self, data):
-        print(len(self.pointcloud))
         if type(data) != bool:
             for element in data:
                 point = self.AD2pos(element[0], element[1], element[2])
@@ -27,6 +26,12 @@ class startSampleSpaceEnv:
                     self.pointcloud.append(point)
 
     def show_sensorData(self):
-        self.infomap = self.map.copy()
+        self.infomap = self.externalMap.copy()
         for point in self.pointcloud:
             self.infomap.set_at((int(point[0]), int(point[1])), (255, 0, 0))
+
+
+enviroment = startSampleSpaceEnv((1200, 600))
+enviroment.originalMap = enviroment.map.copy()
+enviroment.map.fill((0, 0, 0))
+enviroment.infomap = enviroment.map.copy()

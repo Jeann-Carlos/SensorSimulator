@@ -61,8 +61,6 @@ def simulate():
 
             # Q(state, action) <- (1 - a)Q(state, action) + a(reward + rmaxQ(next state, all actions))
             q_table[state][action] = (1 - learning_rate) * q_value + learning_rate * (reward + gamma * best_q)
-            print(reward)
-            print(q_table[state][1])
             # Set up for the next iteration
             state = next_state
 
@@ -87,6 +85,6 @@ if __name__ == "__main__":
     epsilon_decay = 0.999
     learning_rate = 0.1
     gamma = 0.6
-    num_box = tuple([11,11,11,11])
+    num_box = tuple([1201,601])
     q_table = np.zeros(num_box + (env.action_space.n,))
     simulate()

@@ -1,18 +1,17 @@
+import math
 import sys
 from ast import literal_eval
-from enum import Enum
-import pygame
-import math
+
 import numpy as np
+import pygame
 
-class startSampleSpaceEnv:
-    def __init__(self, imageDimensions):
 
-        self.previous_radar = None
+class SampleSpaceEnv:
+    def __init__(self, image_dimensions):
         pygame.init()
+        self.previous_radar = None
         self.running = True
-        self.imageDimensions = imageDimensions
-        self.pointcloud = []
+        self.imageDimensions = image_dimensions
         self.originalMap = []
         self.externalMap = pygame.image.load(sys.argv[1])
         self.mapw, self.maph = self.imageDimensions
@@ -21,169 +20,161 @@ class startSampleSpaceEnv:
         self.map = pygame.display.set_mode((self.mapw, self.maph))
         self.map.blit(self.externalMap, (0, 0))
         self.originalMap = self.map.copy()
-        self.roomba = roombaSimulator(originalMap=self.originalMap)
+        self.roomba = RoombaSimulator(original_map=self.originalMap)
         self.map.fill((255, 255, 255))
         self.infomap = self.map.copy()
         self.reward = 0
-        self.radars = []
 
-
-    def show_sensorData(self):
+    def show_sensor_data(self):
         self.infomap = self.externalMap.copy()
-        for point in self.roomba.getRoombaPointCloud():
+        for point in self.roomba.get_roomba_point_cloud():
             self.infomap.set_at((int(point[0]), int(point[1])), (255, 0, 0))
 
-    def action(self,action):
-        if action == 0:
-            self.roomba.roomba.y -= 2
-        if action == 1:
-            self.roomba.roomba.y += 1
-        if action == 2:
-            self.roomba.roomba.x += 1
-        if action == 3:
-            self.roomba.roomba.x -= 1
-        self.roomba.roombaUpate()
+    def action(self, action):
+        self.roomba.roomba_update(action)
 
-
-    def getroombaposition(self):
-        return self.roomba.roombaPosition()
+    def get_roomba_pos(self):
+        return self.roomba.roomba_pos()
 
     def draw_radar(self):
-        roombaposx,roombaposy = self.getroombaposition()
-        for pos , dist, cos, sin in self.roomba.radars:
+        roombaposx, roombaposy = self.get_roomba_pos()
+        for pos, dist, cos, sin in self.roomba.get_roomba_radars():
             if dist < 40:
-                pygame.draw.line(self.map, (255, 0, 0), (roombaposx+(cos*20),roombaposy+(sin*20)), pos, 2)
+                pygame.draw.line(self.map, (255, 0, 0), (roombaposx + (cos * 20), roombaposy + (sin * 20)), pos, 2)
                 pygame.draw.circle(self.map, (255, 0, 0), pos, 5)
             else:
                 pygame.draw.line(self.map, (0, 0, 0), (roombaposx + (cos * 20), roombaposy + (sin * 20)), pos, 2)
                 pygame.draw.circle(self.map, (0, 0, 0), pos, 5)
 
-    def roombaViewUpdate(self):
-        self.map.blit(self.roomba.roombaObject, (self.roomba.roomba.x, self.roomba.roomba.y))
-
     def observe(self):
         # return state
-        radars = self.roomba.radars
-        ret = [0, 0, 0, 0]
-        for i, r in enumerate(radars):
-            ret[i] = int(r[1]/8)
+        ret = self.get_roomba_pos()
         return tuple(ret)
 
     def view(self):
         for event in pygame.event.get():
-          if event.type == pygame.QUIT:
-            self.running = False
-        self.roombaViewUpdate()
-        self.show_sensorData()
+            if event.type == pygame.QUIT:
+                self.running = False
+        roombaposx, roombaposy = self.get_roomba_pos()
+        self.map.blit(self.roomba.roombaObject, (roombaposx, roombaposy))
+        self.show_sensor_data()
         self.map.blit(self.infomap, (0, 0))
-        rombax,rombay = self.getroombaposition()
-        self.map.blit(self.roomba.roombaObject, (rombax-25,rombay-25))
+        self.map.blit(self.roomba.roombaObject, (roombaposx - 25, roombaposy - 25))
         self.draw_radar()
         pygame.display.update()
         return self.running
 
-
-    def evaluate(self,obs):
+    def evaluate(self):
         reward = 0
-        if  self.previous_radar==None:
-            self.previous_radar=obs
-        for  i , distance in enumerate(obs):
-            if distance< 3:
-                reward-=0
-            elif distance<4:
-                reward-=0
-            else:
+        if self.previous_radar is None:
+            self.previous_radar = self.roomba.radars.copy()
+        for i, distance in enumerate(self.roomba.radars):
+            if distance[1] > self.previous_radar[i][1]:
                 reward += 1
-        self.previous_radar = obs
-        return  reward
+            elif distance[1] == self.previous_radar[i][1]:
+                reward += 0
+            elif distance[1] >= 70:
+                reward += 1
+            else:
+                reward -= 1
+        self.previous_radar = self.roomba.radars.copy()
+        return reward
 
     def is_done(self):
         done = False
         for xy, dist, cos, sin in self.roomba.radars:
             if dist < 10:
                 done = True
-        return  done
+        return done
 
 
-
-
-class roombaSimulator:
-    def __init__(self, xlanePrecisor=4, ylanePrecisor=0, startingPosition=(400, 230),originalMap=None):
+class RoombaSimulator:
+    def __init__(self, starting_pos=(400, 230), original_map=None):
         self.pointcloud = []
-        self.angle = 0
-        self.originalMap = originalMap
-        self.startingPosition = startingPosition
-        self.prescisor = (xlanePrecisor, ylanePrecisor)
+        self.originalMap = original_map
+        self.startingPosition = starting_pos
         self.roombaImage = pygame.image.load('images/ball.png')
         self.roombaObject = pygame.transform.scale(self.roombaImage, (50, 50))
         self.roomba = pygame.Rect(0, 0, 50, 50)
-        self.roomba.x, self.roomba.y = startingPosition
-        self.laser=lidarSensor(int(sys.argv[2]), originalMap, literal_eval(sys.argv[3]))
-        self.radars =[]
+        self.roomba.x, self.roomba.y = starting_pos
+        self.laser = LidarSensor(int(sys.argv[2]), original_map, literal_eval(sys.argv[3]))
+        self.radars = []
 
     def check_radar(self, degree):
-        len = 0
-        cos =  math.cos(math.radians(360 - ( degree)))
-        sin =  math.sin(math.radians(360 - ( degree)))
-        x = int(self.roomba.x + cos * len)
-        y = int(self.roomba.y + sin * len)
+        length = 0
+        cos = math.cos(math.radians(360 - degree))
+        sin = math.sin(math.radians(360 - degree))
+        x = int(self.roomba.x + cos * length)
+        y = int(self.roomba.y + sin * length)
 
-        while self.originalMap.get_at((x, y)) == (255, 255, 255, 255) and len < 80:
-            len = len + 1
-            x = int(self.roomba.x + cos * len)
-            y = int(self.roomba.y + sin * len)
+        while self.originalMap.get_at((x, y)) == (255, 255, 255, 255) and length < 80:
+            length = length + 1
+            x = int(self.roomba.x + cos * length)
+            y = int(self.roomba.y + sin * length)
 
         dist = int(math.sqrt(math.pow(x - self.roomba.x, 2) + math.pow(y - self.roomba.y, 2)))
-        self.radars.append([(x, y), dist,cos,sin])
+        self.radars.append([(x, y), dist, cos, sin])
 
-
-    def roombaUpate(self):
-        self.laser.laserUpdate(self.roombaPosition())
+    def roomba_update(self, action):
+        self.move_roomba(action)
+        self.laser.laser_update(self.roomba_pos())
         sensors_data = self.laser.has_sensed()
-        self.dataStorage(sensors_data)
+        self.data_storage(sensors_data)
         self.radars.clear()
-        for degree in (90,270,180,0):
+        for degree in (90, 270, 180, 0):
             self.check_radar(degree)
 
-
-
-    def dataStorage(self, data):
+    def data_storage(self, data):
         if type(data) != bool:
             for element in data:
-                point = self.AD2pos(element[0], element[1], element[2])
+                point = self.ad2_pos(element[0], element[1], element[2])
                 if point not in self.pointcloud:
                     self.pointcloud.append(point)
 
-    def roombaPosition(self):
-        return (self.roomba.x,self.roomba.y)
+    def roomba_pos(self):
+        return self.roomba.x, self.roomba.y
 
-    def AD2pos(self, distance, angle, position):
+    @staticmethod
+    def ad2_pos(distance, angle, position):
         x = distance * math.cos(angle) + position[0]
         y = -distance * math.sin(angle) + position[1]
-        return (int(x), int(y))
+        return int(x), int(y)
 
-    def getRoombaPointCloud(self):
+    def get_roomba_point_cloud(self):
         return self.pointcloud
 
+    def move_roomba(self, action):
+        if action == 0:
+            self.roomba.y -= 2
+        if action == 1:
+            self.roomba.y += 1
+        if action == 2:
+            self.roomba.x += 1
+        if action == 3:
+            self.roomba.x -= 1
 
-class lidarSensor():
+    def get_roomba_radars(self):
+        return self.radars
 
-    def __init__(self, range, map, distortion):
+
+class LidarSensor:
+
+    def __init__(self, sensor_range, sensor_map, distortion):
         self.position = (0, 0)
-        self._range = range
+        self._range = sensor_range
         self._speed = 4
         self._sigma = np.array([distortion, 0])
-        self._map = map
+        self._map = sensor_map
         self._w, self.h = pygame.display.get_surface().get_size()
         self._beingSensed = []
         self._distance = None
 
-    def laser_distance(self, obstaclePosition):
-        px = (obstaclePosition[0] - self.position[0]) ** 2
-        py = (obstaclePosition[1] - self.position[1]) ** 2
+    def laser_distance(self, obstacle_pos):
+        px = (obstacle_pos[0] - self.position[0]) ** 2
+        py = (obstacle_pos[1] - self.position[1]) ** 2
         return math.sqrt(px + py)
 
-    def laserUpdate(self,position):
+    def laser_update(self, position):
         self.position = position
 
     def has_sensed(self):
@@ -198,8 +189,8 @@ class lidarSensor():
                 if 0 < x < self._w and 0 < y < self.h:
                     color = self._map.get_at((x, y))
                     if (color[0], color[1], color[2]) == (0, 0, 0):
-                        self.distance = self.laser_distance((x, y))
-                        output = self.sensorNoise(angle)
+                        self._distance = self.laser_distance((x, y))
+                        output = self.sensor_noise(angle)
                         output.append(self.position)
                         data.append(output)
                         break
@@ -208,13 +199,10 @@ class lidarSensor():
         else:
             return False
 
-    def sensorNoise(self,angle):
-        mean = np.array([self.distance, angle])
+    def sensor_noise(self, angle):
+        mean = np.array([self._distance, angle])
         covariance = np.diag(self._sigma ** 2)
         distance, angle = np.random.multivariate_normal(mean, covariance)
         distance = max(distance, 0)
         angle = max(angle, 0)
         return [distance, angle]
-
-
-

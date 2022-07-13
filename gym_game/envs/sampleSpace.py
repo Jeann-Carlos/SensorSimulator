@@ -1,5 +1,6 @@
 import math
 import sys
+import time
 from ast import literal_eval
 
 import numpy as np
@@ -9,7 +10,7 @@ import pygame
 class SampleSpaceEnv:
     def __init__(self, image_dimensions):
         pygame.init()
-        self.previous_radar = None
+        self.known_pos = []
         self.running = True
         self.imageDimensions = image_dimensions
         self.originalMap = []
@@ -24,6 +25,9 @@ class SampleSpaceEnv:
         self.map.fill((255, 255, 255))
         self.infomap = self.map.copy()
         self.reward = 0
+        self.time = time.time()
+        self.objective = False
+
 
     def show_sensor_data(self):
         self.infomap = self.externalMap.copy()
@@ -59,12 +63,30 @@ class SampleSpaceEnv:
         self.map.blit(self.roomba.roombaObject, (roombaposx, roombaposy))
         self.show_sensor_data()
         self.map.blit(self.infomap, (0, 0))
+        self.set_objective()
         self.map.blit(self.roomba.roombaObject, (roombaposx - 25, roombaposy - 25))
         self.draw_radar()
+
         pygame.display.update()
         return self.running
 
+    def objective(self):
+        start_time = self.time
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        self.objective = True
+
+        return elapsed_time
+
+
     def evaluate(self):
+        roomba_pos = self.get_roomba_pos()
+        if roomba_pos not in self.known_pos:
+            self.known_pos.append(roomba_pos)
+            return 1
+        else:
+            return 0
+    def prev_evaluate(self):
         reward = 0
         if self.previous_radar is None:
             self.previous_radar = self.roomba.radars.copy()
@@ -87,8 +109,21 @@ class SampleSpaceEnv:
                 done = True
         return done
 
+    def set_objective(self):
+        pygame.draw.circle(self.map, (0,0,128), (860, 500), 5)
+
 
 class RoombaSimulator:
+    class Spot:
+        def __init__(self, i, j):
+            self.x, self.y = i, j
+            self.neighbors = []
+            self.prev = None
+            self.wall = False
+            self.visited = False
+
+
+
     def __init__(self, starting_pos=(400, 230), original_map=None):
         self.pointcloud = []
         self.originalMap = original_map
@@ -99,21 +134,25 @@ class RoombaSimulator:
         self.roomba.x, self.roomba.y = starting_pos
         self.laser = LidarSensor(int(sys.argv[2]), original_map, literal_eval(sys.argv[3]))
         self.radars = []
+        self.npGrid = None
+
 
     def check_radar(self, degree):
-        length = 0
+        length = 15
         cos = math.cos(math.radians(360 - degree))
         sin = math.sin(math.radians(360 - degree))
         x = int(self.roomba.x + cos * length)
         y = int(self.roomba.y + sin * length)
 
-        while self.originalMap.get_at((x, y)) == (255, 255, 255, 255) and length < 80:
+        while (self.originalMap.get_at((x, y)) == (255, 255, 255, 255) or self.originalMap.get_at((x, y)) == (0, 0, 0, 0)) and length < 80:
             length = length + 1
             x = int(self.roomba.x + cos * length)
             y = int(self.roomba.y + sin * length)
 
         dist = int(math.sqrt(math.pow(x - self.roomba.x, 2) + math.pow(y - self.roomba.y, 2)))
         self.radars.append([(x, y), dist, cos, sin])
+
+
 
     def roomba_update(self, action):
         self.move_roomba(action)
@@ -144,15 +183,17 @@ class RoombaSimulator:
         return self.pointcloud
 
     def move_roomba(self, action):
-        if action == 0:
-            self.roomba.y -= 2
-        if action == 1:
-            self.roomba.y += 1
-        if action == 2:
-            self.roomba.x += 1
-        if action == 3:
-            self.roomba.x -= 1
-
+        if len(self.radars)!=0:
+            if action == 0 and self.radars[0][1]>20:
+                self.roomba.y -= 1
+            elif action == 1 and self.radars[1][1]>20:
+                self.roomba.y += 1
+            elif action == 2 and self.radars[3][1]>20:
+                self.roomba.x += 1
+            elif action == 3 and self.radars[2][1]>20:
+                self.roomba.x -= 1
+            else:
+                pass
     def get_roomba_radars(self):
         return self.radars
 
@@ -206,3 +247,4 @@ class LidarSensor:
         distance = max(distance, 0)
         angle = max(angle, 0)
         return [distance, angle]
+

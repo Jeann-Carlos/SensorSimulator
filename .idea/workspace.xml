@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="be5b84ef-5665-411f-8c16-8c6f4b0778cf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gym_game/envs/custom_env.py" beforeDir="false" afterPath="$PROJECT_DIR$/gym_game/envs/custom_env.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gym_game/envs/sampleSpace.py" beforeDir="false" afterPath="$PROJECT_DIR$/gym_game/envs/sampleSpace.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="be5b84ef-5665-411f-8c16-8c6f4b0778cf" name="Changes" comment="Removing uneeded files" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,6 +26,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2AETJNsUAwzYRvyy6d0cP1Ft6iu" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -285,7 +281,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656655848669</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Removing uneeded files">
+      <created>1663365347084</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1663365347084</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -302,7 +305,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="Machine_learning_implmented" />
+                        <option value="main" />
                       </list>
                     </value>
                   </entry>
@@ -317,7 +320,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="updating before implementing machine learning" />
     <MESSAGE value="Machine learnign implemented, looking for good reward algorithms." />
-    <option name="LAST_COMMIT_MESSAGE" value="Machine learnign implemented, looking for good reward algorithms." />
+    <MESSAGE value="Removing uneeded files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removing uneeded files" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -334,7 +338,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/gym_game/envs/sampleSpace.py</url>
-          <line>48</line>
+          <line>50</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>

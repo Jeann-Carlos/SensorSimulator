@@ -10,6 +10,8 @@ import pygame
 class SampleSpaceEnv:
     def __init__(self, image_dimensions):
         pygame.init()
+        pygame.font.init()
+        self.my_font = pygame.font.SysFont('Comic Sans MS', 30)
         self.known_pos = []
         self.running = True
         self.imageDimensions = image_dimensions
@@ -66,6 +68,7 @@ class SampleSpaceEnv:
         self.set_objective()
         self.map.blit(self.roomba.roombaObject, (roombaposx - 25, roombaposy - 25))
         self.draw_radar()
+        self.view_text(roombaposx,roombaposy)
 
         pygame.display.update()
         return self.running
@@ -86,21 +89,22 @@ class SampleSpaceEnv:
             return 1
         else:
             return 0
-    def prev_evaluate(self):
-        reward = 0
-        if self.previous_radar is None:
-            self.previous_radar = self.roomba.radars.copy()
-        for i, distance in enumerate(self.roomba.radars):
-            if distance[1] > self.previous_radar[i][1]:
-                reward += 1
-            elif distance[1] == self.previous_radar[i][1]:
-                reward += 0
-            elif distance[1] >= 70:
-                reward += 1
-            else:
-                reward -= 1
-        self.previous_radar = self.roomba.radars.copy()
-        return reward
+
+    # def prev_evaluate(self):
+    #     reward = 0
+    #     if self.previous_radar is None:
+    #         self.previous_radar = self.roomba.radars.copy()
+    #     for i, distance in enumerate(self.roomba.radars):
+    #         if distance[1] > self.previous_radar[i][1]:
+    #             reward += 1
+    #         elif distance[1] == self.previous_radar[i][1]:
+    #             reward += 0
+    #         elif distance[1] >= 70:
+    #             reward += 1
+    #         else:
+    #             reward -= 1
+    #     self.previous_radar = self.roomba.radars.copy()
+    #     return reward
 
     def is_done(self):
         done = False
@@ -111,6 +115,13 @@ class SampleSpaceEnv:
 
     def set_objective(self):
         pygame.draw.circle(self.map, (0,0,128), (860, 500), 5)
+
+    def view_text(self,roombaposx,roombaposy):
+        space_interval = 0
+        for pos, dist, cos, sin in self.roomba.get_roomba_radars():
+            text_surface = self.my_font.render(f'({pos[0]},{pos[1]})', False, (0, 0, 0))
+            self.map.blit(text_surface, (0, space_interval))
+            space_interval += 100
 
 
 class RoombaSimulator:

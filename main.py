@@ -1,9 +1,10 @@
 import random
-import sys
 from ast import literal_eval
 from os import path
+import sys, pygame
 
 import gym
+import gym_game
 import numpy as np
 
 

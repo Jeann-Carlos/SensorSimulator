@@ -70,7 +70,6 @@ def simulate():
             q_table[state][action] = (1 - learning_rate) * q_value + learning_rate * (reward + gamma * best_q)
             # Set up for the next iteration
             state = next_state
-
             # Draw games
             finished = env.render()
 

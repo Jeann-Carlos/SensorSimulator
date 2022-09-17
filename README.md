@@ -53,7 +53,7 @@ In order to recognize barriers, our reference robot has a simulated lidar sensor
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Control Outputs: Mobility
+## Control Outputs: Mobility
 
 We have many of presumptions about how things work. Among the significant ones are:
 * The obstacles are never spherical and the landscape is always plain.

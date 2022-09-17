@@ -36,24 +36,44 @@
 <div id="#about-the-project"></div>
 
 ## About The Project
-Python was used to write the simulator that I created. It does not have many frills, but it is designed to accomplish one thing very well: offer a realistic simulation of a mobile robot and give a budding roboticist a straightforward foundation for learning robot software programming. Although playing with a real robot is always preferable, a solid Python robot simulator is considerably more approachable and a fantastic place to start.
-A Q-learning machine algorithm randomly chooses each action the robot does once it has started off at a certain location in the environment. The Q-learning method uses model-free reinforcement learning to determine the worth of a given action in a given situation.
-It can handle issues with stochastic transitions and rewards without the need for modifications since it does not require a model of the environment (thus the term "model-free").
+A mobile robot with complete autonomy, this. This implies that the roomba robot will be able to move around freely in space while being fully controlled by the robot. 
+Because it doesn't limit users to any one particular way,OpenAI Gym was used to create our environment. 
+It doesn't have a lot of bells and whistles, but it is made to do one thing very well: provide a realistic simulation of a mobile robot and give a fledgling roboticist a simple basis for learning robot software development.
+
+Even though using a real robot is always preferred, getting started with a good Python robot simulator is a great idea because it is much more approachable.
+
 
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+## The Goal
+Our robot's program will have a single, unambiguous objective: it will try to reach a predefined location while also cleaning as much as it can. 
+The robot will make pseudo-random decisions using Q-learning, and once it has completed its task, it will recieve a reward depending on how much it cleaned and how long it took.
+Before the robot is turned on, the coordinates of the target are input into the control software, albeit they may also come from a distinct Python application that controls the robot's motions.
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Control Inputs: Sensors
-A robot can be outfitted to monitor its environment in a variety of ways. These might include anything from light sensors, bumpers, cameras, proximity sensors, and so on. Robots can also connect with outside sensors to get data that they themselves are unable to directly monitor.
-In order to recognize barriers, our reference robot has a simulated lidar sensor that fires lasers in all directions. There are 4 more "wall sensors" that are oriented in each of the four directions. The lidar sensor's range and presicion may both be adjusted.  If more "wallsensors" are required, you may always add more and quickly change their range.
+A robot may be configured in a number of ways to keep an eye on its surroundings. These might include anything from proximity sensors, cameras, light sensors, bumpers, and so on. 
+Robots can also communicate with external sensors to obtain information that they are unable to directly monitor themselves.
+Our reference robot includes a simulated lidar sensor that fires lasers in all directions in order to detect impediments. 
+There are four more "wall sensors" that are placed four ways. The lidar sensor's range and presicion may both be adjusted. You may always install more "wallsensors" and rapidly adjust their range if more are needed.
 
+The robot must make an effort to gauge its own condition as well as that of the surroundings using its sensors. These estimates will never be flawless, but since the robot will rely on them for all of its judgments, they must be at least reasonably accurate.
+It makes the following assumptions using its proximity sensors:
+
+* The approach to barriers
+* Distance between barriers
+* The place of the robot
+* The robot's compass direction
+
+
+The robot must make an effort to gauge its own condition as well as that of the surroundings using its sensors.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Control Outputs: Mobility
+## Control Outputs: Mobility
 
 We have many of presumptions about how things work. Among the significant ones are:
 * The obstacles are never spherical and the landscape is always plain.
@@ -64,36 +84,7 @@ We have many of presumptions about how things work. Among the significant ones a
 
 Even if most of these hypotheses are plausible in a home-like setting, circular obstructions could be present. Our obstacle avoidance program is easily implemented, and it moves around barriers by adhering to their perimeter.
 
-### Running the program: 
-#### Prerequisites
- You'll need a machine on a restricted network, preferably running a Debian-based Linux distribution, as well as access to the following programs::
-  ```
-  curl
-  rsync
-  enum4linux
-  feroxbuster
-  gobuster
-  impacket-scripts
-  nbtscan
-  nikto
-  nmap
-  onesixtyone
-  oscanner
-  redis-tools
-  smbclient
-  smbmap
-  snmpwalk
-  sslscan
-  svwar
-  tnscmd10g
-  whatweb
-  wkhtmltopdf
-  python
-  openvpn
-  ```
-My recommendation is to use kali linux: https://www.kali.org/get-kali/
 
-#### Run the installation script:  
 
 
    Change the apropiate permissions:
@@ -108,55 +99,33 @@ My recommendation is to use kali linux: https://www.kali.org/get-kali/
    ```
    sudo ./cslabproject/client_workdir/installation_script.sh [ovpn_key]
    ```   
-#### Client_scan settings:  
-   Open the file `client_scan.sh` inside client_workdir with a file editor and modify: 
-   ```
-   localip  # local machine ip
-   serverip # vpn server ip
-   targettimeout # per target timeout
-   globaltimeout # global timeout 
-   userrsync # user to rrsync
-   ```
-#### Setup Crontab: 
+## Reward Calculation: 
+  
+Let’s now consider, the robot has a slight chance of dysfunctioning and might take the left or right or bottom turn instead of taking the upper turn in order to get to the green room from where it is now (red room).
+Now, the question is how do we enable the robot to handle this when it is out there in the above environment?
+
+![reward_photo](https://blog.floydhub.com/content/images/2019/05/image-22.png)
+
+An environment with an agent (with stochasticity)
+This is a situation where the decision making regarding which turn is to be taken is partly random and partly under the control of the robot.
+Partly random because we are not sure when exactly the robot might dysfunction and partly under the control of the robot because it is still making a decision of taking a turn on its own and with the help of the program embedded into it. 
+Here is the definition of Markov Decision Processes (collected from Wikipedia):
+
+
+## Enviroment:
+
+The basic structure of the environment is described by the observation_space and the action_space attributes of the Gym Env class.
+
+The observation_space defines the structure as well as the legitimate values for the observation of the state of the environment. The observation can be different things for different environments. The most common form is a screenshot of the game. There can be other forms of observations as well, such as certain characteristics of the environment described in vector form.
+
+Similarly, the Env class also defines an attribute called the action_space, which describes the numerical structure of the legitimate actions that can be applied to the environment.
+
+## Running the robot: 
    Refer to the set crontab timer section:
    [Set crontab timer](#set-crontab-timer)
    
  
  <p align="right">(<a href="#top">back to top</a>)</p>
- 
-
-## Set crontab timer:  
-   
-   ```
-   sudo crontab -e 
-   ```
-  This line should appear at the end of the file when you open it (unless you used your own ISO): `*/3 * * * * program_name >/dev/null 2>&1`   
-   Server: Change it to specify when the process should look for fresh files sent by the client pc; the scan will run every 3 minutes by default.
-   Client: Change it to specify when the process should start a scan and send files to the Vpn server.
-   
-   Crontab Syntax:  
-   ![GitHub Logo](https://i2.wp.com/www.adminschoice.com/wp-content/uploads/2009/12/crontab-layout.png?resize=768%2C341&ssl=1)
-  
-<p align="right">(<a href="#top">back to top</a>)</p>
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-<div id="#roadmap"></div>
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] More seamless instalation
-- [ ] Automatic Vulnerabilty assesement
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 

@@ -1,5 +1,5 @@
 <!-- TABLE OF CONTENTS -->
-<details>
+
 <summary><h2>Table of Contents</h2></summary>
 <ol>
 <li>
@@ -29,193 +29,42 @@
 <li><a href="#license">License</a></li>
 <li><a href="#contact">Contact</a></li>
 <li><a href="#acknowledgments">Acknowledgments</a></li>
-</ol>
-</details>
+</ol> 
+
 
 <!-- ABOUT THE PROJECT -->
 <div id="#about-the-project"></div>
+
 ## About The Project
+Python was used to write the simulator that I created. It does not have many frills, but it is designed to accomplish one thing very well: offer a realistic simulation of a mobile robot and give a budding roboticist a straightforward foundation for learning robot software programming. Although playing with a real robot is always preferable, a solid Python robot simulator is considerably more approachable and a fantastic place to start.
+A Q-learning machine algorithm randomly chooses each action the robot does once it has started off at a certain location in the environment. The Q-learning method uses model-free reinforcement learning to determine the worth of a given action in a given situation.
+It can handle issues with stochastic transitions and rewards without the need for modifications since it does not require a model of the environment (thus the term "model-free").
 
-The ever-increasing demand for security in the cyberspace environment is
-always on the lookout for the safest way to browse the internet without fear of
-repercussions. As a result, restrictions are always imposed to prevent malicious
-agents from gaining access to our systems. Because of the risks involved, drastic
-measures are sometimes taken such as blocking all incoming connections to the
-network. Despite there being ways to get around these restrictions, on the rare
-occasion that you need to access any restricted network from outside (of their local network), current methods require leaving our system somewhat vulnerable.
-
-
-This research focuses on creating innovative methods for gaining secure access to
-these restricted systems while minimizing any potential hazards involved. The
-main scope of this project is to allow those in need of reconnaissance of their
-private system to be able to do so without fear of exposing themselves or their
-systems. Many governmental and commercial enterprises may find it advantageous to be able to open up their network without granting the entire access
-to it and/or exposing it to outsiders. Plausible scenarios where our research
-could help is in the incorporation of third-party IT/Network management users
-or networks that may be located behind many firewalls.This is currently being
-accomplished through the usage of VPNs and traffic redirection but other
-methods are planned.
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-<!-- GETTING STARTED -->
 
-## Getting Started
-
-This is a reference page designed to assist anyone working on this project with setting up the basics and getting their computers up and running. It is assumed that you are familiar with bash commands and terminal usage.For this project, only two debian-based machines are required: the server and the client, where as the client must be situated within the restricted network.
+## Control Inputs: Sensors
+A robot can be outfitted to monitor its environment in a variety of ways. These might include anything from light sensors, bumpers, cameras, proximity sensors, and so on. Robots can also connect with outside sensors to get data that they themselves are unable to directly monitor.
+In order to recognize barriers, our reference robot has a simulated lidar sensor that fires lasers in all directions. There are 4 more "wall sensors" that are oriented in each of the four directions. The lidar sensor's range and presicion may both be adjusted.  If more "wallsensors" are required, you may always add more and quickly change their range.
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+### Control Outputs: Mobility
 
-## Prepared ISO installation:
- 
-#### Download the ISO for the respective machines:
-   1. Link to the server mahcine iso: [https://example.com](https://example.com)  
-     User: cslab  
-     Pass: sweet child o ccom
-   2. Link to the client mahcine iso: [https://example.com](https://example.com)  
-      User: cslab  
-      Pass: sweet child o ccom  
-  #### Clone the project: 
-   Once you are in, use the terminal to clone the project:
-   ```
-   git clone https://git.ccom.uprrp.edu/jeann.hernandez/cslabproject.git
-   ```  
-   
-   
-### Server Side:  
-   If you dont have a VPN of your own, you can use the openvpn installer:
-   ```
-   sudo chmod +x ./cslabproject/server_workdir/openvpn_install.sh
-   sudo ./cslabproject/server_workdir/openvpn-install.sh
-   ```
-#### Setup Crontab: 
-   Refer to the set crontab timer section:
-   [Set crontab timer](#set-crontab-timer)
-   
-  
-  
-### Client Side:
-   Run the installation script with your respective ovpn key:
-   ```
-   sudo chmod +x ./cslabproject/client_workdir/installation_script.sh
-   sudo ./cslabproject/client_workdir/installation_script.sh [ovpn_key]
-   ```
-#### Client_scan settings:    
-   Open the file `client_scan.sh` inside client_workdir with a file editor and modify: 
-   ```
-   localip  # local machine ip
-   serverip # vpn server ip
-   targettimeout # per target timeout
-   globaltimeout # global timeout 
-   userrsync # user to rrsync
-   ```  
-#### Setup Crontab: 
-   Refer to the set crontab timer section:
-   [Set crontab timer](#set-crontab-timer)
-   
-   
-<p align="right">(<a href="#top">back to top</a>)</p>
+We have many of presumptions about how things work. Among the significant ones are:
+* The obstacles are never spherical and the landscape is always plain.
+* The tires never squeal
+* Nothing will ever maneuver the robot.
+* There is no failure or incorrect reading from the sensors. (but there is imprecision)
 
 
-## Manual Installation:
+Even if most of these hypotheses are plausible in a home-like setting, circular obstructions could be present. Our obstacle avoidance program is easily implemented, and it moves around barriers by adhering to their perimeter.
 
-  Download the ISO for their respective machines:
-   1. Link to the server mahcine iso: [https://example.com](https://example.com)  
-     User: cslab  
-     Pass: sweet child o ccom
-   3. Link to the client mahcine iso: [https://example.com](https://example.com)  
-    User: cslab  
-    Pass: sweet child o ccom
-  Clone the project: 
-   Once you are in, use the terminal to clone the project:
-   ```
-   git clone https://git.ccom.uprrp.edu/jeann.hernandez/cslabproject.git
-   ```
-   
-
-### Server Side:
-#### Run the installation script:  
-   ```
-   sudo chmod +x ./cslabproject/server_workdir/installation_script.sh
-   sudo ./cslabproject/server_workdir/installation_script.sh
-   ```
-   If you dont have a VPN of your own, you can use the openvpn installer:
-   ```
-   sudo chmod +x ./cslabproject/server_workdir/openvpn_install.sh
-   sudo ./cslabproject/server_workdir/openvpn-install.sh
-   ```
-#### Set up the Database:
-   ```  
-   sudo mysql -u root
-   ```
-   Inside mysql:  
-   ```
-   create database [DB_name];
-   use [DB_name];
-   ```
-   Copy generated sources from `genSources.txt` located in `cslab/server_workdir/genSources.txt`.  
-   And run
-   ```
-  show tables;
-   ```
-#### Create a new DB user:
-   ```
- CREATE USER '[user_name]'@'localhost' IDENTIFIED BY '[password]';
-   ```
-   To assign privileges to your database:
-   ```
- GRANT ALL PRIVILEGES ON [DB_name].* TO '[user_name]'@localhost IDENTIFIED BY '[password]';
-   ```
-   Exit MariaDB:
-   ```
- exit
-   ```
-#### Create new user for RRsync (Restricted rsync):
- To add the user run: 
-  ```
-sudo useradd [rrsync_user]
-  ```
- To add password to it:
-   ```
-sudo passwd  [rrsync_user]
-   ```
-  Assing a home dir:
-   ```
-sudo mkhomedir_helper [rrsync_user]
-   ```
-   Create a results dir in their home dir and correct permissions:
-   ```
-   sudo mkdir /home/[rrsync_user]/results
-   sudo chown [rrsync_user] /home/[rrsync_user]/results
-   sudo chmod 755 /home/client_rrsync/results
-   ```
-#### Setup User quota:
-   Modify sudo nano `/etc/fstab modify` the `options` section, add `usrquota grpquota` to it,
-   it should look like this.  
-##### Example before:  
-   
-     UUID          /                 ext4    defaults        0 1
-
-##### Example after:    
-     UUID          /                  ext4    defaults,usrquota,grpquota  0 1
-   Reboot the machine.
-   
-   After booting run to set user quota with:
-   ```
-   sudo quotacheck -cum /
-   sudo quotaon -v /
-   sudo setquota -u [rrsync_client] 1G 1G 0 0 /
-   ```
-#### Setup Crontab: 
-   Refer to the set crontab timer section:
-   [Set crontab timer](#set-crontab-timer)
-   
-
-### Client Side: 
+### Running the program: 
 #### Prerequisites
  You'll need a machine on a restricted network, preferably running a Debian-based Linux distribution, as well as access to the following programs::
   ```

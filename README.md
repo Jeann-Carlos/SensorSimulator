@@ -1,4 +1,4 @@
-#top
+
 <!-- TABLE OF CONTENTS -->
 
 <summary><h2>Table of Contents</h2></summary>
@@ -82,20 +82,20 @@ We have many of presumptions about how things work. Among the significant ones a
 * Nothing will ever maneuver the robot.
 * There is no failure or incorrect reading from the sensors. (but there is imprecision)
 
-
 Even if most of these hypotheses are plausible in a home-like setting, circular obstructions could be present. Our obstacle avoidance program is easily implemented, and it moves around barriers by adhering to their perimeter.
  
 # Reward Calculation: 
   
-Let’s now consider, the robot has a slight chance of dysfunctioning and might take the left or right or bottom turn instead of taking the upper turn in order to get to the green room from where it is now (red room).
-Now, the question is how do we enable the robot to handle this when it is out there in the above environment?
+Let's now take into account the possibility that the robot may not know where the green square is and choose to travel to the green room by taking the left, right, or bottom turns rather than the higher turns from its current location (red room).
+The challenge is, how can we make the robot capable of handling this when it is outside in the environment described above?
 
 ![reward_photo](https://blog.floydhub.com/content/images/2019/05/image-22.png)
+This is a scenario where choosing which turn to take is somewhat random and partially under the robot's control.
+The robot is still choosing when to take a turn on its own and with the aid of the program that is implanted in it, so some of it is random since we are unsure of exactly when the robot could malfunction. By repetition it will learn what steps to take and speceficially when to take them.
 
-An environment with an agent (with stochasticity)
-This is a situation where the decision making regarding which turn is to be taken is partly random and partly under the control of the robot.
-Partly random because we are not sure when exactly the robot might dysfunction and partly under the control of the robot because it is still making a decision of taking a turn on its own and with the help of the program embedded into it. 
-Here is the definition of Markov Decision Processes (collected from Wikipedia):
+## Algorithm
+
+
 
 
 ## Enviroment:
@@ -107,8 +107,6 @@ The observation_space defines the structure as well as the legitimate values for
 Similarly, the Env class also defines an attribute called the action_space, which describes the numerical structure of the legitimate actions that can be applied to the environment.
 
 ## Running the robot: 
-   Refer to the set crontab timer section:
-   [Set crontab timer](#set-crontab-timer)
    
  
  <p align="right">(<a href="#top">back to top</a>)</p>

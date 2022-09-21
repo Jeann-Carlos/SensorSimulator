@@ -90,10 +90,15 @@ Let's now take into account the possibility that the robot may not know where th
 The challenge is, how can we make the robot capable of handling this when it is outside in the environment described above?
 
 ![reward_photo](https://blog.floydhub.com/content/images/2019/05/image-22.png)
+
+
 This is a scenario where choosing which turn to take is somewhat random and partially under the robot's control.
 The robot is still choosing when to take a turn on its own and with the aid of the program that is implanted in it, so some of it is random since we are unsure of exactly when the robot could malfunction. By repetition it will learn what steps to take and speceficially when to take them.
 
+
 ## Algorithm
+
+We won't delve into details, but there are a variety of approaches to design the algorithm; we ultimately chose a time/area-cleaned based technique. The fundamental concept is to give the robot a beginning and an end. The two possible outcomes are for the robot to either never reach the destination or to move directly up to it. Consequently, our algorithm prevents the first one by awarding it extra points for time and a time limit; if the time limit expires, it notifies the robot for the iteration and loses points. If the robot takes a lot of time, it will receive fewer points than it would if it were able to clean the same amount of area in less time. For the later we decided to award a predefined amount of points to the robot when it cleans previously uncleaned surfaces, but none when it cleans previously cleaned ones. This one is faily important because it mostly instructs the robot to learn to stay away from areas once they have been cleaned; this is crucial since it saves a lot of time and encourages the robot to explore further ( since it understands its not recieving points). Combining the two algorithms results in a robot that strives to clean uncleaned regions as quickly as possible while avoiding clean ones.
 
 
 

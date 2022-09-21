@@ -1,3 +1,4 @@
+#top
 <!-- TABLE OF CONTENTS -->
 
 <summary><h2>Table of Contents</h2></summary>
@@ -35,12 +36,9 @@
 <!-- ABOUT THE PROJECT -->
 <div id="#about-the-project"></div>
 
-## About The Project
-A mobile robot with complete autonomy, this. This implies that the roomba robot will be able to move around freely in space while being fully controlled by the robot. 
-Because it doesn't limit users to any one particular way,OpenAI Gym was used to create our environment. 
-It doesn't have a lot of bells and whistles, but it is made to do one thing very well: provide a realistic simulation of a mobile robot and give a fledgling roboticist a simple basis for learning robot software development.
-
-Even though using a real robot is always preferred, getting started with a good Python robot simulator is a great idea because it is much more approachable.
+# About The Project
+## Introduction
+This personal project's primary goal is to develop a replica of a roomba with complete autonomy, one that enables the roomba to move around in space on its own without aid from humans. The environment was created using OpenAI mainly because OpenAI Gym doesn't limit development in just one specific way. Our roomba doesn't have a lot of bells and whistles, but it is made to do one thing very well: give a novice roboticist a simple framework for comprehending roomba software development while imitating a genuine roomba function and even though using a real roomba is always advised, a great Python roomba simulator is a fantastic alternative to start with because it is much more approachable.
 
 
 
@@ -48,11 +46,12 @@ Even though using a real robot is always preferred, getting started with a good 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## The Goal
-Our robot's program will have a single, unambiguous objective: it will try to reach a predefined location while also cleaning as much as it can. 
-The robot will make pseudo-random decisions using Q-learning, and once it has completed its task, it will recieve a reward depending on how much it cleaned and how long it took.
-Before the robot is turned on, the coordinates of the target are input into the control software, albeit they may also come from a distinct Python application that controls the robot's motions.
+The program for our robot will have one clear goal: it will aim to go to a predetermined place while cleaning as much as it can (ie. passing trough a certain space at least once).
+The robot will use Q-learning to make judgments that are close to being random. Once a decision has been made, the robot will receive a reward based on how much it cleaned and how long it took. Every iteration the robot will start to take better descisions and hopefully once a good reward algorithm has been found, it will teach itself how to clean in the most efficient and fast way.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+# Configuration
 
 ## Control Inputs: Sensors
 A robot may be configured in a number of ways to keep an eye on its surroundings. These might include anything from proximity sensors, cameras, light sensors, bumpers, and so on. 
@@ -75,6 +74,8 @@ The robot must make an effort to gauge its own condition as well as that of the 
 
 ## Control Outputs: Mobility
 
+The target's coordinates are entered into the control program before the robot is turned on, however they might potentially originate from a separate Python application that manages the robot's movements.
+
 We have many of presumptions about how things work. Among the significant ones are:
 * The obstacles are never spherical and the landscape is always plain.
 * The tires never squeal
@@ -83,23 +84,8 @@ We have many of presumptions about how things work. Among the significant ones a
 
 
 Even if most of these hypotheses are plausible in a home-like setting, circular obstructions could be present. Our obstacle avoidance program is easily implemented, and it moves around barriers by adhering to their perimeter.
-
-
-
-
-   Change the apropiate permissions:
-   ```
-   sudo chmod 755 ./cslabproject/client_workdir/installation_script.sh
-   ```
-   The file should have a variable named `serverip` assing to it your vpn ip like so:
-   ```
-   serverip=127.0.0.1
-   ```
-   Run the installation script with your respective ovpn key:
-   ```
-   sudo ./cslabproject/client_workdir/installation_script.sh [ovpn_key]
-   ```   
-## Reward Calculation: 
+ 
+# Reward Calculation: 
   
 Let’s now consider, the robot has a slight chance of dysfunctioning and might take the left or right or bottom turn instead of taking the upper turn in order to get to the green room from where it is now (red room).
 Now, the question is how do we enable the robot to handle this when it is out there in the above environment?

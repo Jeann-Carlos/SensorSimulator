@@ -111,7 +111,7 @@ The observation_space defines the structure as well as the legitimate values for
 
 Similarly, the Env class also defines an attribute called the action_space, which describes the numerical structure of the legitimate actions that can be applied to the environment.
 
-## Running the robot: 
+# Running the robot: 
    
  
  <p align="right">(<a href="#top">back to top</a>)</p>

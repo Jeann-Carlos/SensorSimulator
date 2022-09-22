@@ -5,6 +5,10 @@
 <ol>
 <li>
 <a href="#about-the-project">About The Project</a>
+<ul>
+<li><a href="#The-Goal">Introduction</a></li>
+<li><a href="#Introduction">The Goal</a></li>
+</ul>
 </li>
 <li>
 <a href="#getting-started">Getting Started</a>
@@ -36,6 +40,8 @@
 <!-- ABOUT THE PROJECT -->
 <div id="#about-the-project"></div>
 
+
+<div id="#Introduction"></div>
 # About The Project
 ## Introduction
 This personal project's primary goal is to develop a replica of a roomba with complete autonomy, one that enables the roomba to move around in space on its own without aid from humans. The environment was created using OpenAI mainly because OpenAI Gym doesn't limit development in just one specific way. Our roomba doesn't have a lot of bells and whistles, but it is made to do one thing very well: give a novice roboticist a simple framework for comprehending roomba software development while imitating a genuine roomba function and even though using a real roomba is always advised, a great Python roomba simulator is a fantastic alternative to start with because it is much more approachable.
@@ -45,6 +51,8 @@ This personal project's primary goal is to develop a replica of a roomba with co
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+
+<div id="#The-Goal"></div>
 ## The Goal
 The program for our robot will have one clear goal: it will aim to go to a predetermined place while cleaning as much as it can (ie. passing trough a certain space at least once).
 The robot will use Q-learning to make judgments that are close to being random. Once a decision has been made, the robot will receive a reward based on how much it cleaned and how long it took. Every iteration the robot will start to take better descisions and hopefully once a good reward algorithm has been found, it will teach itself how to clean in the most efficient and fast way.

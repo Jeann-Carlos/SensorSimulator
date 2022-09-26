@@ -127,14 +127,15 @@ Similarly, the Env class also defines an attribute called the action_space, whic
 
 ```
 [program_name] [image_location] [(x,y) origin] [(x,y) finish] [sensor_range] [sigma_nose_values from 1-5]
-```
+
+
 
 
 
 You will be greeted with something similar to this, the robot should automatically start "cleaning".
 
 
-<img src="../../../../Pictures/Screenshot 2022-09-16 174323.png" width="900" >
+<img src="https://user-images.githubusercontent.com/56929989/192367024-a31baa88-60c0-493a-abf1-5d9dc0710ccd.png" width="900" >
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>

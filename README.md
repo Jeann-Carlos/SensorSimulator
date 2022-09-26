@@ -139,6 +139,9 @@ You will be greeted with something similar to this, the robot should automatical
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+## Depencencies
+You will need Gym, which is required for the machine learning agent, Pygame which provides the environment for open Gym and Numpy is also required for some array computations and common math formulae.
 <!-- CONTRIBUTING -->
 ## Contributing
 

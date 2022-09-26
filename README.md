@@ -119,12 +119,25 @@ The observation_space defines the structure as well as the legitimate values for
 Similarly, the Env class also defines an attribute called the action_space, which describes the numerical structure of the legitimate actions that can be applied to the environment.
 
 # Running the robot: 
-   
+  
  
- <p align="right">(<a href="#top">back to top</a>)</p>
+## Usage
+    
+ The run the program you will need the following:
+
+```
+[program_name] [image_location] [(x,y) origin] [(x,y) finish] [sensor_range] [sigma_nose_values from 1-5]
+```
 
 
 
+You will be greeted with something similar to this, the robot should automatically start "cleaning".
+
+
+<img src="../../../../Pictures/Screenshot 2022-09-16 174323.png" width="900" >
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 <!-- CONTRIBUTING -->
 ## Contributing
 
@@ -142,7 +155,7 @@ Don't forget to give the project a star! Thanks again!
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-
+ 
 <!-- LICENSE -->
 ## License
 
